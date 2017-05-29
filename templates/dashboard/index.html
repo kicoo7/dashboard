@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Empatica Dashboard</title>
+    <link href="{% static 'css/bulma.css' %}" rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cloud.github.com/downloads/lafeber/world-flags-sprite/flags32.css"/>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+
+        #wrapper {
+            height: 500px;
+            width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        #container {
+            float: left;
+            height: 500px;
+            width: 700px;
+            margin: 0;
+        }
+
+        #info {
+            float: left;
+            width: 270px;
+            padding-left: 20px;
+            margin: 100px 0 0 0;
+            border-left: 1px solid silver;
+        }
+
+        #info h2 {
+            display: inline;
+            font-size: 13pt;
+        }
+
+        #info .f32 .flag {
+            vertical-align: bottom !important;
+        }
+
+        #info h4 {
+            margin: 1em 0 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="nav has-shadow">
+        <div class="container">
+            <div class="nav-left">
+                <a class="nav-item">
+                    <img src="{% static 'images/logo.png' %}" alt="Empatica logo">
+                </a>
+            </div>
+            <span class="nav-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+            <div class="nav-right nav-menu">
+                <a class="nav-item is-tab">
+                    <figure class="image is-16x16" style="margin-right: 8px;">
+                        <img src="http://bulma.io/images/jgthms.png">
+                    </figure>
+                    Rajchevski Krste
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="tile is-ancestor">
+        <div class="tile is-parent">
+            <article class="tile is-child notification">
+                <div class="content">
+                    <p class="title">Empatica</p>
+                    <p class="subtitle">Welcome back</p>
+                    <div class="content">
+                        <aside class="menu">
+                            <p class="menu-label">
+                                JUMP TO
+                            </p>
+                            <ul class="menu-list">
+                                <li><a>Dashboard</a></li>
+                                <li><a>Statistics</a></li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="tile is-vertical is-8">
+            <div class="tile is-parent" style="padding-left: 0;">
+                <article class="tile is-child notification is-danger" style="background: #bc204b">
+                    <p class="title">Dashboard</p>
+                    <p class="subtitle">Total downloads for today : {{ total }}</p>
+                    <div class="content">
+                        <nav class="level">
+                            <div class="level-item has-text-centered">
+                                <div>
+                                    <p class="heading">Morning</p>
+                                    <p class="title">3,456</p>
+                                </div>
+                            </div>
+                            <div class="level-item has-text-centered">
+                                <div>
+                                    <p class="heading">Afternoon</p>
+                                    <p class="title">123</p>
+                                </div>
+                            </div>
+                            <div class="level-item has-text-centered">
+                                <div>
+                                    <p class="heading">Evening</p>
+                                    <p class="title">456K</p>
+                                </div>
+                            </div>
+                            <div class="level-item has-text-centered">
+                                <div>
+                                    <p class="heading">Night</p>
+                                    <p class="title">789</p>
+                                </div>
+                            </div>
+                        </nav><!-- Content -->
+                        <hr/>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+    <!--<section class="hero">-->
+    <!--<div class="hero-body">-->
+    <!--<div class="container">-->
+    <!--<h1 class="title">-->
+    <!--Hero title-->
+    <!--</h1>-->
+    <!--<h2 class="subtitle">-->
+    <!--Hero subtitle-->
+    <!--</h2>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</section>-->
+    <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="wrapper">
+        <div id="container"></div>
+        <div id="info">
+            <span class="f32"><span id="flag"></span></span>
+            <h2></h2>
+            <div class="subheader">Click countries to view history</div>
+            <div id="country-chart"></div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script>
+    Highcharts.chart('container2', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Downloads'
+        },
+        subtitle: {
+            text: 'Number of downloads for the past 12 months'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Number of downloads'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Morning',
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+        }, {
+            name: 'Afternoon',
+            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+        }, {
+            name: 'Evening',
+            data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+        }, {
+            name: 'Night',
+            data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+        }]
+    });
+</script>
+<script>
+    $.getJSON('https://www.highcharts.com/samples/data/jsonp.php?filename=world-population-history.csv&callback=?', function (csv) {
+
+        // Parse the CSV Data
+        /*Highcharts.data({
+         csv: data,
+         switchRowsAndColumns: true,
+         parsed: function () {
+         console.log(this.columns);
+         }
+         });*/
+
+        // Very simple and case-specific CSV string splitting
+        function CSVtoArray(text) {
+            return text.replace(/^"/, '')
+                .replace(/",$/, '')
+                .split('","');
+        }
+
+        csv = csv.split(/\n/);
+
+        var countries = {},
+            mapChart,
+            countryChart,
+            numRegex = /^[0-9\.]+$/,
+            quoteRegex = /\"/g,
+            categories = CSVtoArray(csv[1]).slice(4);
+
+        // Parse the CSV into arrays, one array each country
+        $.each(csv.slice(2), function (j, line) {
+            var row = CSVtoArray(line),
+                data = row.slice(4);
+
+            $.each(data, function (i, val) {
+
+                val = val.replace(quoteRegex, '');
+                if (numRegex.test(val)) {
+                    val = parseInt(val, 10);
+                } else if (!val) {
+                    val = null;
+                }
+                data[i] = val;
+            });
+            countries[row[1]] = {
+                name: row[0],
+                code3: row[1],
+                data: data
+            };
+        });
+
+        // For each country, use the latest value for current population
+        var data = [];
+        for (var code3 in countries) {
+            if (countries.hasOwnProperty(code3)) {
+                var value = null,
+                    year,
+                    itemData = countries[code3].data,
+                    i = itemData.length;
+
+                while (i--) {
+                    if (typeof itemData[i] === 'number') {
+                        value = itemData[i];
+                        year = categories[i];
+                        break;
+                    }
+                }
+                data.push({
+                    name: countries[code3].name,
+                    code3: code3,
+                    value: value,
+                    year: year
+                });
+            }
+        }
+
+        // Add lower case codes to the data set for inclusion in the tooltip.pointFormat
+        var mapData = Highcharts.geojson(Highcharts.maps['custom/world']);
+        $.each(mapData, function () {
+            this.id = this.properties['hc-key']; // for Chart.get()
+            this.flag = this.id.replace('UK', 'GB').toLowerCase();
+        });
+
+        // Wrap point.select to get to the total selected points
+        Highcharts.wrap(Highcharts.Point.prototype, 'select', function (proceed) {
+
+            proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+            var points = mapChart.getSelectedPoints();
+            if (points.length) {
+                if (points.length === 1) {
+                    $('#info #flag').attr('class', 'flag ' + points[0].flag);
+                    $('#info h2').html(points[0].name);
+                } else {
+                    $('#info #flag').attr('class', 'flag');
+                    $('#info h2').html('Comparing countries');
+
+                }
+                $('#info .subheader').html('<h4>Historical population</h4><small><em>Shift + Click on map to compare countries</em></small>');
+
+                if (!countryChart) {
+                    countryChart = Highcharts.chart('country-chart', {
+                        chart: {
+                            height: 250,
+                            spacingLeft: 0
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        title: {
+                            text: null
+                        },
+                        subtitle: {
+                            text: null
+                        },
+                        xAxis: {
+                            tickPixelInterval: 50,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            title: null,
+                            opposite: true
+                        },
+                        tooltip: {
+                            split: true
+                        },
+                        plotOptions: {
+                            series: {
+                                animation: {
+                                    duration: 500
+                                },
+                                marker: {
+                                    enabled: false
+                                },
+                                threshold: 0,
+                                pointStart: parseInt(categories[0], 10)
+                            }
+                        }
+                    });
+                }
+
+                $.each(points, function (i) {
+                    // Update
+                    if (countryChart.series[i]) {
+                        /*$.each(countries[this.code3].data, function (pointI, value) {
+                         countryChart.series[i].points[pointI].update(value, false);
+                         });*/
+                        countryChart.series[i].update({
+                            name: this.name,
+                            data: countries[this.code3].data,
+                            type: points.length > 1 ? 'line' : 'area'
+                        }, false);
+                    } else {
+                        countryChart.addSeries({
+                            name: this.name,
+                            data: countries[this.code3].data,
+                            type: points.length > 1 ? 'line' : 'area'
+                        }, false);
+                    }
+                });
+                while (countryChart.series.length > points.length) {
+                    countryChart.series[countryChart.series.length - 1].remove(false);
+                }
+                countryChart.redraw();
+
+            } else {
+                $('#info #flag').attr('class', '');
+                $('#info h2').html('');
+                $('#info .subheader').html('');
+                if (countryChart) {
+                    countryChart = countryChart.destroy();
+                }
+            }
+        });
+
+        // Initiate the map chart
+        mapChart = Highcharts.mapChart('container', {
+
+            title: {
+                text: 'Population history by country'
+            },
+
+            subtitle: {
+                text: 'Source: <a href="http://data.worldbank.org/indicator/SP.POP.TOTL/countries/1W?display=default">The World Bank</a>'
+            },
+
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+
+            colorAxis: {
+                type: 'logarithmic',
+                endOnTick: false,
+                startOnTick: false,
+                min: 50000
+            },
+
+            tooltip: {
+                footerFormat: '<span style="font-size: 10px">(Click for details)</span>'
+            },
+
+            series: [{
+                data: data,
+                mapData: mapData,
+                joinBy: ['iso-a3', 'code3'],
+                name: 'Current population',
+                allowPointSelect: true,
+                cursor: 'pointer',
+                states: {
+                    select: {
+                        color: '#a4edba',
+                        borderColor: 'black',
+                        dashStyle: 'shortdot'
+                    }
+                }
+            }]
+        });
+
+        // Pre-select a country
+        mapChart.get('us').select();
+    });
+</script>
+</body>
+</html>
