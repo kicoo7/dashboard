@@ -220,9 +220,7 @@ def top_countries_statistics(request):
         to_date = datetime.datetime.combine(datetime.datetime.strptime(to_date_parameter, "%Y-%m-%d").date(),
                                             datetime.time.min)
     except:
-        to_date = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
-
-        print(from_date, to_date)
+        to_date = datetime.datetime.combine(datetime.datetime.today(), datetime.time.min)
 
     result = {'countries': [], 'data': []}
     countries_query_set = WorldBorder.objects.all()
