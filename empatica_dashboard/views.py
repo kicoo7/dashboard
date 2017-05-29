@@ -10,12 +10,13 @@ from datetime import date, timedelta
 from operator import itemgetter
 import random
 
-for i in range(1, 100):
-    if (random.randint(0, 1) == 0):
-        app_id = 'IOS_ALERT'
-    else:
-        app_id = 'IOS_MATE'
-    Download(latitude=random.randint(42, 52), longitude=random.randint(0, 27), app_id=app_id).save()
+#RANDOM Downloads
+# for i in range(1, 100):
+#     if (random.randint(0, 1) == 0):
+#         app_id = 'IOS_ALERT'
+#     else:
+#         app_id = 'IOS_MATE'
+#     Download(latitude=random.randint(42, 52), longitude=random.randint(0, 27), app_id=app_id).save()
 
 
 # returns today`s downloads statistics
@@ -236,7 +237,6 @@ def top_countries_statistics(request):
 
     downloads = Download.objects.filter(downloaded_at__gte=from_date, downloaded_at__lte=to_date)
     for download in downloads:
-        print(download.country_id)
         if download.country_id != -1:
             downloads_by_country['data'][download.country_id] += 1
         else:
