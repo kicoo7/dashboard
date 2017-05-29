@@ -10,13 +10,15 @@ from datetime import date, timedelta
 from operator import itemgetter
 import random
 
-#RANDOM Downloads
-# for i in range(1, 100):
+# # RANDOM Downloads
+# to_date = datetime.datetime.combine(datetime.date(year=2017, day=1, month=6), datetime.time(hour=12))
+# for i in range(1, 10):
 #     if (random.randint(0, 1) == 0):
 #         app_id = 'IOS_ALERT'
 #     else:
 #         app_id = 'IOS_MATE'
-#     Download(latitude=random.randint(42, 52), longitude=random.randint(0, 27), app_id=app_id).save()
+#     Download(latitude=random.randint(42, 52), longitude=random.randint(0, 27), app_id=app_id,
+#              downloaded_at=to_date).save()
 
 
 # returns today`s downloads statistics
