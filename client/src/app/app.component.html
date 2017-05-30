@@ -1,0 +1,73 @@
+<div class="tile is-ancestor">
+  <div class="tile is-parent">
+    <article class="tile is-child notification">
+      <div class="content">
+        <p class="title">Empatica</p>
+        <p class="subtitle">Welcome back</p>
+        <div class="content">
+          <aside class="menu">
+            <p class="menu-label">
+              JUMP TO
+            </p>
+            <ul class="menu-list">
+              <li><a href="#time-of-day">Statistics by time of day</a></li>
+              <li><a href="#country">Statistics by country</a></li>
+              <li><a href="#app-id">Statistics by app id</a></li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="tile is-vertical is-8">
+    <div class="tile is-parent" style="padding-left: 0;">
+      <article class="tile is-child notification is-danger" style="background: #bc204b">
+        <p class="title">Dashboard</p>
+        <p class="subtitle">Total downloads for today : {{total_downloads}}</p>
+        <div class="content">
+          <nav class="level">
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Morning</p>
+                <p class="title">{{morning_downloads}}</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Afternoon</p>
+                <p class="title">{{afternoon_downloads}}</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Evening</p>
+                <p class="title">{{evening_downloads}}</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Night</p>
+                <p class="title">{{night_downloads}}</p>
+              </div>
+            </div>
+
+          </nav><!-- Content -->
+          <hr/>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+<hr/>
+<div style="width:100%">
+  <h1 class="title is-3">Today`s downloads</h1>
+  <sebm-google-map style="height:400px" [latitude]="45.4654" [longitude]="9.1859"
+                   (centerChange)="onCenterChange()">
+    <sebm-google-map-marker *ngFor="let m of markers; let i = index" [latitude]="(m ? m.lat : 45.4654) "
+                            [longitude]="(m ? m.lng : 9.1859)"></sebm-google-map-marker>
+  </sebm-google-map>
+
+  <app-column-chart id="time-of-day"></app-column-chart>
+  <app-bar-chart id="country"></app-bar-chart>
+  <app-line-chart id="app-id"></app-line-chart>
+</div>
