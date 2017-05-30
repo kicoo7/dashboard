@@ -80,12 +80,14 @@ def time_of_day_statistics(request):
         'date',
         'number_of_downloads')
     # gets evening downloads from 18:00:00 to 19:59:59 and groups them by day
-    evening_downloads = Download.objects.filter(downloaded_at__gte=from_date, downloaded_at__lte=to_date,downloaded_at__hour__range=[18, 19]) \
+    evening_downloads = Download.objects.filter(downloaded_at__gte=from_date, downloaded_at__lte=to_date,
+                                                downloaded_at__hour__range=[18, 19]) \
         .annotate(date=TruncDay('downloaded_at')).values('date').annotate(number_of_downloads=Count('id')).values(
         'date',
         'number_of_downloads')
     # gets evening downloads from 20:00:00 to 23:59:59 and groups them by day
-    night_downloads = Download.objects.filter(downloaded_at__gte=from_date, downloaded_at__lte=to_date,downloaded_at__hour__range=[20, 23]) \
+    night_downloads = Download.objects.filter(downloaded_at__gte=from_date, downloaded_at__lte=to_date,
+                                              downloaded_at__hour__range=[20, 23]) \
         .annotate(date=TruncDay('downloaded_at')).values('date').annotate(number_of_downloads=Count('id')).values(
         'date',
         'number_of_downloads')
@@ -136,7 +138,6 @@ def time_of_day_statistics(request):
             evening_downloads_statistics['data'][-1] = evening_downloads[e_index]['number_of_downloads']
             e_index += 1
         # checks if there are night downloads on this day and sets them if there are
-        print(date.day,date.month,date.year,night_downloads[n_index]['date'].day, night_downloads[n_index]['date'].month,night_downloads[n_index]['date'].year)
         if n_index < len(night_downloads) and date.day == night_downloads[n_index]['date'].day and date.month == \
                 night_downloads[n_index]['date'].month and date.year == night_downloads[n_index]['date'].year:
             night_downloads_statistics['data'][-1] = night_downloads[n_index]['number_of_downloads']
@@ -211,7 +212,7 @@ def app_id_statistics(request):
     return HttpResponse(JsonResponse(result, safe=False), content_type="application/json")
 
 
-# returns downloads for top 15 countries
+# returns downloads for all countries
 def top_countries_statistics(request):
     try:
         from_date_parameter = request.GET.get('from_date', '')
@@ -225,7 +226,7 @@ def top_countries_statistics(request):
         to_date = datetime.datetime.combine(datetime.datetime.strptime(to_date_parameter, "%Y-%m-%d").date(),
                                             datetime.time.max)
     except:
-        to_date = datetime.datetime.combine(datetime.datetime.today(), datetime.time.max)
+        to_date = datetime.datetime.today()
 
     result = {'countries': [], 'data': []}
     countries_query_set = WorldBorder.objects.all()
