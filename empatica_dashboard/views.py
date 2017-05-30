@@ -10,6 +10,7 @@ from datetime import date, timedelta
 from operator import itemgetter
 import random
 
+
 # # RANDOM Downloads
 # to_date = datetime.datetime.combine(datetime.date(year=2017, day=1, month=6), datetime.time(hour=12))
 # for i in range(1, 10):
@@ -61,9 +62,9 @@ def time_of_day_statistics(request):
     try:
         to_date_parameter = request.GET.get('to_date', '')
         to_date = datetime.datetime.combine(datetime.datetime.strptime(to_date_parameter, "%Y-%m-%d").date(),
-                                            datetime.time.min)
+                                            datetime.time.max)
     except:
-        to_date = datetime.datetime.combine(datetime.date(year=2017, day=1, month=3), datetime.time.min)
+        to_date = datetime.datetime.combine(datetime.datetime.today(), datetime.time.max)
 
     # get downloads from 'from_date' to 'to_date'
     # gets morning downloads from 00:00:00 to 11:59:59 and groups them by day
@@ -221,9 +222,9 @@ def top_countries_statistics(request):
     try:
         to_date_parameter = request.GET.get('to_date', '')
         to_date = datetime.datetime.combine(datetime.datetime.strptime(to_date_parameter, "%Y-%m-%d").date(),
-                                            datetime.time.min)
+                                            datetime.time.max)
     except:
-        to_date = datetime.datetime.combine(datetime.datetime.today(), datetime.time.min)
+        to_date = datetime.datetime.combine(datetime.datetime.today(), datetime.time.max)
 
     result = {'countries': [], 'data': []}
     countries_query_set = WorldBorder.objects.all()
@@ -245,7 +246,6 @@ def top_countries_statistics(request):
             downloads_by_country['data'][-1] += 1  # increase the number of downloads for 'Other'
 
     result['data'] = downloads_by_country
-    print(downloads_by_country)
 
     return HttpResponse(JsonResponse(result, safe=False), content_type="application/json")
 
